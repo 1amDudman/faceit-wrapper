@@ -9,6 +9,7 @@ import (
 
 type PlayerService interface {
 	GetByPlayerID(ctx context.Context, playerID string) (*models.Player, error)
+	GetByPlayerNickname(ctx context.Context, nickname string) (*models.Player, error)
 }
 
 type MatchService interface {

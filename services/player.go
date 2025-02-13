@@ -48,3 +48,29 @@ func (ps *PlayerService) GetByPlayerID(ctx context.Context, playerID string) (*m
 
 	return &player, nil
 }
+
+func (ps *PlayerService) GetByPlayerNickname(ctx context.Context, nickname string) (*models.Player, error) {
+	if nickname == "" {
+		return nil, errors.ErrPlayerNicknameEmpty
+	}
+
+	endpoint := fmt.Sprintf("players?nickname=%s", nickname)
+	req, err := ps.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var player models.Player
+	resp, err := ps.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&player)
+	if err != nil {
+		return nil, err
+	}
+
+	return &player, nil
+}
