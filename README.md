@@ -3,7 +3,7 @@
 The Faceit SDK provides a user-friendly interface for interacting with the Faceit API, including working with players and matches. The SDK is built with an emphasis on ease of use, flexibility, and scalability, allowing developers to integrate Faceit functionality into their applications.
 **Mainly focused on CS2 and different player statistics.**
 
-## Возможности
+## Possibilities
 
 - **Players**: Getting information about players.
 - **Matches**: Access match data.
