@@ -1,8 +1,8 @@
-package models
+package player
 
 import "time"
 
-type Player struct {
+type PlayerDetails struct {
 	PlayerID           string            `json:"player_id"`
 	Nickname           string            `json:"nickname"`
 	Avatar             string            `json:"avatar"`

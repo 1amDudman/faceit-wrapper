@@ -1,6 +1,6 @@
-package models
+package match
 
-type Match struct {
+type MatchDetails struct {
 	MatchID         string           `json:"match_id"`
 	Version         int              `json:"version"`
 	Game            string           `json:"game"`

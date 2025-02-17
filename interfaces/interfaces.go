@@ -4,16 +4,17 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/1amDudman/faceit-wrapper/models"
+	"github.com/1amDudman/faceit-wrapper/models/player"
+	"github.com/1amDudman/faceit-wrapper/models/match"
 )
 
 type PlayerService interface {
-	GetByPlayerID(ctx context.Context, playerID string) (*models.Player, error)
-	GetByPlayerNickname(ctx context.Context, nickname string) (*models.Player, error)
+	GetPlayerDetailsByID(ctx context.Context, playerID string) (*player.PlayerDetails, error)
+	GetPlayerDetailsByNickname(ctx context.Context, nickname string) (*player.PlayerDetails, error)
 }
 
 type MatchService interface {
-	GetByMatchID(ctx context.Context, matchID string) (*models.Match, error)
+	GetMatchDetailsByID(ctx context.Context, matchID string) (*match.MatchDetails, error)
 }
 
 type HTTPRequester interface {
