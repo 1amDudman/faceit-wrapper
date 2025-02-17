@@ -8,7 +8,7 @@ import (
 
 	"github.com/1amDudman/faceit-wrapper/errors"
 	"github.com/1amDudman/faceit-wrapper/interfaces"
-	"github.com/1amDudman/faceit-wrapper/models"
+	models "github.com/1amDudman/faceit-wrapper/models/match"
 )
 
 type MatchService struct {
@@ -22,8 +22,8 @@ func NewMatchService(http interfaces.HTTPRequester) *MatchService {
 	}
 }
 
-// Get data from a match by its ID
-func (ms *MatchService) GetByMatchID(ctx context.Context, matchID string) (*models.Match, error) {
+// Get match details(without deep match stats) by ID
+func (ms *MatchService) GetMatchDetailsByID(ctx context.Context, matchID string) (*models.MatchDetails, error) {
 	if matchID == "" {
 		return nil, errors.ErrMatchIDEmpty
 	}
@@ -34,7 +34,7 @@ func (ms *MatchService) GetByMatchID(ctx context.Context, matchID string) (*mode
 		return nil, err
 	}
 
-	var match models.Match
+	var match models.MatchDetails
 	resp, err := ms.http.Do(req)
 	if err != nil {
 		return nil, err

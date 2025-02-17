@@ -8,7 +8,7 @@ import (
 
 	"github.com/1amDudman/faceit-wrapper/errors"
 	"github.com/1amDudman/faceit-wrapper/interfaces"
-	"github.com/1amDudman/faceit-wrapper/models"
+	models "github.com/1amDudman/faceit-wrapper/models/player"
 )
 
 type PlayerService struct {
@@ -22,8 +22,8 @@ func NewPlayerService(http interfaces.HTTPRequester) *PlayerService {
 	}
 }
 
-// Get data from a match by its ID
-func (ps *PlayerService) GetByPlayerID(ctx context.Context, playerID string) (*models.Player, error) {
+// Get player data by his ID
+func (ps *PlayerService) GetPlayerDetailsByID(ctx context.Context, playerID string) (*models.PlayerDetails, error) {
 	if playerID == "" {
 		return nil, errors.ErrPlayerIDEmpty
 	}
@@ -34,7 +34,7 @@ func (ps *PlayerService) GetByPlayerID(ctx context.Context, playerID string) (*m
 		return nil, err
 	}
 
-	var player models.Player
+	var player models.PlayerDetails
 	resp, err := ps.http.Do(req)
 	if err != nil {
 		return nil, err
@@ -49,7 +49,8 @@ func (ps *PlayerService) GetByPlayerID(ctx context.Context, playerID string) (*m
 	return &player, nil
 }
 
-func (ps *PlayerService) GetByPlayerNickname(ctx context.Context, nickname string) (*models.Player, error) {
+// Get player data by his nickname
+func (ps *PlayerService) GetPlayerDetailsByNickname(ctx context.Context, nickname string) (*models.PlayerDetails, error) {
 	if nickname == "" {
 		return nil, errors.ErrPlayerNicknameEmpty
 	}
@@ -60,7 +61,7 @@ func (ps *PlayerService) GetByPlayerNickname(ctx context.Context, nickname strin
 		return nil, err
 	}
 
-	var player models.Player
+	var player models.PlayerDetails
 	resp, err := ps.http.Do(req)
 	if err != nil {
 		return nil, err
