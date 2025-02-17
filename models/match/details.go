@@ -1,38 +1,38 @@
 package match
 
 type MatchDetails struct {
-	MatchID         string           `json:"match_id"`
-	Version         int              `json:"version"`
-	Game            string           `json:"game"`
-	Region          string           `json:"region"`
-	CompetitionID   string           `json:"competition_id"`
-	CompetitionType string           `json:"competition_type"`
-	CompetitionName string           `json:"competition_name"`
-	OrganizerID     string           `json:"organizer_id"`
-	Teams           map[string]Team  `json:"teams"`
-	Voting          Voting           `json:"voting"`
-	CalculateElo    bool             `json:"calculate_elo"`
-	ConfiguredAt    int64            `json:"configured_at"`
-	StartedAt       int64            `json:"started_at"`
-	FinishedAt      int64            `json:"finished_at"`
-	DemoURL         []string         `json:"demo_url"`
-	ChatRoomID      string           `json:"chat_room_id"`
-	BestOf          int              `json:"best_of"`
-	Results         Results          `json:"results"`
-	DetailedResults []DetailedResult `json:"detailed_results"`
-	Status          string           `json:"status"`
-	FaceitURL       string           `json:"faceit_url"`
+	MatchID         string                 `json:"match_id"`
+	Version         int                    `json:"version"`
+	Game            string                 `json:"game"`
+	Region          string                 `json:"region"`
+	CompetitionID   string                 `json:"competition_id"`
+	CompetitionType string                 `json:"competition_type"`
+	CompetitionName string                 `json:"competition_name"`
+	OrganizerID     string                 `json:"organizer_id"`
+	Teams           map[string]TeamDetails `json:"teams"`
+	Voting          Voting                 `json:"voting"`
+	CalculateElo    bool                   `json:"calculate_elo"`
+	ConfiguredAt    int64                  `json:"configured_at"`
+	StartedAt       int64                  `json:"started_at"`
+	FinishedAt      int64                  `json:"finished_at"`
+	DemoURL         []string               `json:"demo_url"`
+	ChatRoomID      string                 `json:"chat_room_id"`
+	BestOf          int                    `json:"best_of"`
+	Results         Results                `json:"results"`
+	DetailedResults []DetailedResult       `json:"detailed_results"`
+	Status          string                 `json:"status"`
+	FaceitURL       string                 `json:"faceit_url"`
 }
 
-type Team struct {
-	FactionID   string        `json:"faction_id"`
-	Leader      string        `json:"leader"`
-	Avatar      string        `json:"avatar"`
-	Roster      []MatchPlayer `json:"roster"`
-	Stats       TeamStats     `json:"stats"`
-	Substituted bool          `json:"substituted"`
-	Name        string        `json:"name"`
-	Type        string        `json:"type"`
+type TeamDetails struct {
+	FactionID   string           `json:"faction_id"`
+	Leader      string           `json:"leader"`
+	Avatar      string           `json:"avatar"`
+	Roster      []MatchPlayer    `json:"roster"`
+	Stats       TeamDetailsStats `json:"stats"`
+	Substituted bool             `json:"substituted"`
+	Name        string           `json:"name"`
+	Type        string           `json:"type"`
 }
 
 type MatchPlayer struct {
@@ -46,7 +46,7 @@ type MatchPlayer struct {
 	AnticheatRequired bool   `json:"anticheat_required"`
 }
 
-type TeamStats struct {
+type TeamDetailsStats struct {
 	WinProbability float64    `json:"winProbability"`
 	SkillLevel     SkillRange `json:"skillLevel"`
 	Rating         int        `json:"rating"`

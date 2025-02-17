@@ -15,6 +15,7 @@ type PlayerService interface {
 
 type MatchService interface {
 	GetMatchDetailsByID(ctx context.Context, matchID string) (*match.MatchDetails, error)
+	GetMatchStatsByID(ctx context.Context, matchID string) (*match.MatchStats, error)
 }
 
 type HTTPRequester interface {

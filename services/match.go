@@ -15,7 +15,7 @@ type MatchService struct {
 	http interfaces.HTTPRequester
 }
 
-// NewMatchService is a MatchService constructor
+// MatchService constructor
 func NewMatchService(http interfaces.HTTPRequester) *MatchService {
 	return &MatchService{
 		http: http,
@@ -34,17 +34,44 @@ func (ms *MatchService) GetMatchDetailsByID(ctx context.Context, matchID string)
 		return nil, err
 	}
 
-	var match models.MatchDetails
+	var matchDetails models.MatchDetails
 	resp, err := ms.http.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&match)
+	err = json.NewDecoder(resp.Body).Decode(&matchDetails)
 	if err != nil {
 		return nil, err
 	}
 
-	return &match, nil
+	return &matchDetails, nil
+}
+
+// Get players' stats in a match by its ID
+func (ms *MatchService) GetMatchStatsByID(ctx context.Context, matchID string) (*models.MatchStats, error) {
+	if matchID == "" {
+		return nil, errors.ErrMatchIDEmpty
+	}
+
+	endpoint := fmt.Sprintf("matches/%s/stats", matchID)
+	req, err := ms.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var matchStats models.MatchStats
+	resp, err := ms.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&matchStats)
+	if err != nil {
+		return nil, err
+	}
+
+	return &matchStats, nil
 }
