@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -30,24 +29,13 @@ func (ps *PlayerService) GetPlayerDetailsByID(ctx context.Context, playerID stri
 	}
 
 	endpoint := fmt.Sprintf("players/%s", playerID)
-	req, err := ps.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
+	var playerDetails models.PlayerDetails
+	err := ps.http.MakeRequest(ctx, http.MethodGet, endpoint, &playerDetails)
 	if err != nil {
 		return nil, err
 	}
 
-	var player models.PlayerDetails
-	resp, err := ps.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&player)
-	if err != nil {
-		return nil, err
-	}
-
-	return &player, nil
+	return &playerDetails, nil
 }
 
 // Get player data by his nickname
@@ -57,19 +45,8 @@ func (ps *PlayerService) GetPlayerDetailsByNickname(ctx context.Context, nicknam
 	}
 
 	endpoint := fmt.Sprintf("players?nickname=%s", nickname)
-	req, err := ps.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var playerDetails models.PlayerDetails
-	resp, err := ps.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&playerDetails)
+	err := ps.http.MakeRequest(ctx, http.MethodGet, endpoint, &playerDetails)
 	if err != nil {
 		return nil, err
 	}
@@ -87,19 +64,8 @@ func (ps *PlayerService) GetPlayerStats(ctx context.Context, playerID, gameID st
 	}
 
 	endpoint := fmt.Sprintf("players/%s/stats/%s", playerID, gameID)
-	req, err := ps.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var playerStats models.PlayerStats
-	resp, err := ps.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&playerStats)
+	err := ps.http.MakeRequest(ctx, http.MethodGet, endpoint, &playerStats)
 	if err != nil {
 		return nil, err
 	}
@@ -121,20 +87,8 @@ func (ps *PlayerService) GetPlayerStatsByRange(ctx context.Context, playerID, ga
 		endpoint += fmt.Sprintf("?%s=%s&", k, v)
 	}
 	endpoint = strings.TrimSuffix(endpoint, "&")
-
-	req, err := ps.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var playerRangeStats models.PlayerRangeStats
-	resp, err := ps.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&playerRangeStats)
+	err := ps.http.MakeRequest(ctx, http.MethodGet, endpoint, &playerRangeStats)
 	if err != nil {
 		return nil, err
 	}

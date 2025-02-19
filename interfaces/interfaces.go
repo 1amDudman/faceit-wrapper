@@ -2,7 +2,6 @@ package interfaces
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/1amDudman/faceit-wrapper/models/match"
 	"github.com/1amDudman/faceit-wrapper/models/player"
@@ -21,7 +20,5 @@ type MatchService interface {
 }
 
 type HTTPRequester interface {
-	NewRequest(ctx context.Context, method, endpoint string, body []byte) (*http.Request, error)
-	Do(req *http.Request) (*http.Response, error)
-	// MakeRequest(ctx context.Context, method, endpoint string, result any) error
+	MakeRequest(ctx context.Context, method, endpoint string, result any) error
 }

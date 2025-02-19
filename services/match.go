@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -29,19 +28,8 @@ func (ms *MatchService) GetMatchDetailsByID(ctx context.Context, matchID string)
 	}
 
 	endpoint := fmt.Sprintf("matches/%s", matchID)
-	req, err := ms.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var matchDetails models.MatchDetails
-	resp, err := ms.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&matchDetails)
+	err := ms.http.MakeRequest(ctx, http.MethodGet, endpoint, &matchDetails)
 	if err != nil {
 		return nil, err
 	}
@@ -56,19 +44,8 @@ func (ms *MatchService) GetMatchStatsByID(ctx context.Context, matchID string) (
 	}
 
 	endpoint := fmt.Sprintf("matches/%s/stats", matchID)
-	req, err := ms.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-
 	var matchStats models.MatchStats
-	resp, err := ms.http.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	err = json.NewDecoder(resp.Body).Decode(&matchStats)
+	err := ms.http.MakeRequest(ctx, http.MethodGet, endpoint, &matchStats)
 	if err != nil {
 		return nil, err
 	}

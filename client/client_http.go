@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 )
 
 // NewRequest ia a http Request wrapper
-func (fc *FaceitClient) NewRequest(ctx context.Context, method, endpoint string, body []byte) (*http.Request, error) {
+func (fc *FaceitClient) newRequest(ctx context.Context, method, endpoint string, body []byte) (*http.Request, error) {
 	url := fc.apiURL + endpoint
 	req, err := http.NewRequestWithContext(ctx, method, url, nil)
 	if err != nil {
@@ -23,7 +24,7 @@ func (fc *FaceitClient) NewRequest(ctx context.Context, method, endpoint string,
 }
 
 // Do ia a http Do wrapper
-func (fc *FaceitClient) Do(req *http.Request) (*http.Response, error) {
+func (fc *FaceitClient) do(req *http.Request) (*http.Response, error) {
 	resp, err := fc.httpClient.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", errors.ErrRequestFailed, err)
@@ -34,4 +35,25 @@ func (fc *FaceitClient) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	return resp, nil
+}
+
+// Request process wrapper
+func (fc *FaceitClient) MakeRequest(ctx context.Context, method, endpoint string, result any) error {
+	req, err := fc.newRequest(ctx, method, endpoint, nil)
+	if err != nil {
+		return err
+	}
+
+	resp, err := fc.do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(result)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
