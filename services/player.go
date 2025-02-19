@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/1amDudman/faceit-wrapper/errors"
 	"github.com/1amDudman/faceit-wrapper/interfaces"
@@ -15,7 +16,7 @@ type PlayerService struct {
 	http interfaces.HTTPRequester
 }
 
-// NewMatchService is a PlayerService constructor
+// PlayerService constructor
 func NewPlayerService(http interfaces.HTTPRequester) *PlayerService {
 	return &PlayerService{
 		http: http,
@@ -61,17 +62,82 @@ func (ps *PlayerService) GetPlayerDetailsByNickname(ctx context.Context, nicknam
 		return nil, err
 	}
 
-	var player models.PlayerDetails
+	var playerDetails models.PlayerDetails
 	resp, err := ps.http.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	err = json.NewDecoder(resp.Body).Decode(&player)
+	err = json.NewDecoder(resp.Body).Decode(&playerDetails)
 	if err != nil {
 		return nil, err
 	}
 
-	return &player, nil
+	return &playerDetails, nil
+}
+
+// Get total player stats(all time)
+func (ps *PlayerService) GetPlayerStats(ctx context.Context, playerID, gameID string) (*models.PlayerStats, error) {
+	if playerID == "" {
+		return nil, errors.ErrPlayerIDEmpty
+	}
+	if gameID == "" {
+		return nil, errors.ErrGameIDEmpty
+	}
+
+	endpoint := fmt.Sprintf("players/%s/stats/%s", playerID, gameID)
+	req, err := ps.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var playerStats models.PlayerStats
+	resp, err := ps.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&playerStats)
+	if err != nil {
+		return nil, err
+	}
+
+	return &playerStats, nil
+}
+
+// Get player stats by range of matches
+func (ps *PlayerService) GetPlayerStatsByRange(ctx context.Context, playerID, gameID string, params map[string]string) (*models.PlayerRangeStats, error) {
+	if playerID == "" {
+		return nil, errors.ErrPlayerIDEmpty
+	}
+	if gameID == "" {
+		return nil, errors.ErrGameIDEmpty
+	}
+
+	endpoint := fmt.Sprintf("players/%s/games/%s/stats", playerID, gameID)
+	for k, v := range params {
+		endpoint += fmt.Sprintf("?%s=%s&", k, v)
+	}
+	endpoint = strings.TrimSuffix(endpoint, "&")
+
+	req, err := ps.http.NewRequest(ctx, http.MethodGet, endpoint, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	var playerRangeStats models.PlayerRangeStats
+	resp, err := ps.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	err = json.NewDecoder(resp.Body).Decode(&playerRangeStats)
+	if err != nil {
+		return nil, err
+	}
+
+	return &playerRangeStats, nil
 }
