@@ -9,8 +9,8 @@ import (
 	"github.com/1amDudman/faceit-wrapper/errors"
 )
 
-// NewRequest ia a http Request wrapper
-func (fc *FaceitClient) newRequest(ctx context.Context, method, endpoint string, body []byte) (*http.Request, error) {
+// Request preparation
+func (fc *FaceitClient) newRequest(ctx context.Context, method, endpoint string) (*http.Request, error) {
 	url := fc.apiURL + endpoint
 	req, err := http.NewRequestWithContext(ctx, method, url, nil)
 	if err != nil {
@@ -23,7 +23,7 @@ func (fc *FaceitClient) newRequest(ctx context.Context, method, endpoint string,
 	return req, nil
 }
 
-// Do ia a http Do wrapper
+// Send request handling
 func (fc *FaceitClient) do(req *http.Request) (*http.Response, error) {
 	resp, err := fc.httpClient.Do(req)
 	if err != nil {
@@ -39,7 +39,7 @@ func (fc *FaceitClient) do(req *http.Request) (*http.Response, error) {
 
 // Request process wrapper
 func (fc *FaceitClient) MakeRequest(ctx context.Context, method, endpoint string, result any) error {
-	req, err := fc.newRequest(ctx, method, endpoint, nil)
+	req, err := fc.newRequest(ctx, method, endpoint)
 	if err != nil {
 		return err
 	}

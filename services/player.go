@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/1amDudman/faceit-wrapper/errors"
 	"github.com/1amDudman/faceit-wrapper/interfaces"
@@ -83,12 +82,13 @@ func (ps *PlayerService) GetPlayerStatsByRange(ctx context.Context, playerID, ga
 	}
 
 	endpoint := fmt.Sprintf("players/%s/games/%s/stats", playerID, gameID)
-	for k, v := range params {
-		endpoint += fmt.Sprintf("?%s=%s&", k, v)
+	endpoint, err := addParamsToEndpoint(endpoint, params)
+	if err != nil {
+		return nil, err
 	}
-	endpoint = strings.TrimSuffix(endpoint, "&")
+
 	var playerRangeStats models.PlayerRangeStats
-	err := ps.http.MakeRequest(ctx, http.MethodGet, endpoint, &playerRangeStats)
+	err = ps.http.MakeRequest(ctx, http.MethodGet, endpoint, &playerRangeStats)
 	if err != nil {
 		return nil, err
 	}
