@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// TODO
+// Convert provided date to epoch milliseconds
 func getDateInEpochMilliseconds(date string) (int64, error) {
 	var layouts = []string{
 		"2006-01-02",
@@ -19,10 +19,10 @@ func getDateInEpochMilliseconds(date string) (int64, error) {
 		}
 	}
 
-	return 0, fmt.Errorf("something went wrong with the date: %s", date) // TODO
+	return 0, fmt.Errorf("failed to parse date '%s' with any of the supported formats: %v", date, layouts)
 }
 
-// TODO
+// Add query params to an endpoint
 func addParamsToEndpoint(endpoint string, params map[string]string) (string, error) {
 	if len(params) == 0 {
 		return endpoint, nil
@@ -33,7 +33,7 @@ func addParamsToEndpoint(endpoint string, params map[string]string) (string, err
 		if k == "from" || k == "to" {
 			epoch, err := getDateInEpochMilliseconds(v)
 			if err != nil {
-				return "", fmt.Errorf("params handling error %s: %w", k, err) // TODO
+				return "", fmt.Errorf("params handling error %s: %w", k, err)
 			}
 			processedParams[k] = fmt.Sprintf("%d", epoch)
 		} else {
